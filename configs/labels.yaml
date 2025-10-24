@@ -1,0 +1,6 @@
+S: 10
+R: 5
+input_dir: data_raw
+contact_output: data_proc/contact_labels.parquet
+bip_output: data_proc/labels.parquet
+bins_json: data_proc/SxR_bins.json

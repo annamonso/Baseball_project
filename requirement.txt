@@ -4,3 +4,5 @@ matplotlib
 scikit-learn 
 pybaseball
 yaml
+pyarrow
+fastparquet
