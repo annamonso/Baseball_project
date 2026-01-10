@@ -77,10 +77,8 @@ def build_labels(df: pd.DataFrame, S: int, R: int):
     bip = compute_spray(bip)
     bip, bins = discretize_spray(bip, S=S, R=R)
     keep = [c for c in [
-        "game_date","pitcher","batter","pitch_type","p_throws","stand",
-        "release_speed","pfx_x","pfx_z",
-        "events","outcome",
-        "hc_x","hc_y","spray_angle_deg","spray_distance_ft",
+        "game_date","pitcher","batter",
+        "outcome",
         "sector_bin","ring_bin","spray_bin"
     ] if c in bip.columns]
     return bip[keep], bins

@@ -56,10 +56,12 @@ Baseball_project/
 
 | Module | Status | Description |
 |--------|---------|-------------|
-| `src/data/make_dataset.py` | ✅ | Fetches Statcast data and saves raw CSV/Parquet files. |
-| `src/features/make_features.py` | ✅ | Builds model features (pitch, batter, context variables). |
+| `src/data/pull_statcast.py` | ✅ | Fetches Statcast data and saves raw CSV/Parquet files. |
+| `src/features/make_features.py` | ✅ | Builds pre-contact features (pitch, context, matchup). |
 | `src/features/make_labels_contact.py` | ✅ | Generates `is_contact` binary label. |
 | `src/features/make_labels_bip.py` | ✅ | Creates BIP outcome and spray location labels (`SxR_bins`). |
+| `src/features/make_training_sets.py` | ✅ | Merges features + labels into training-ready datasets. |
+| `src/models/train_model_contact.py` | ✅ | Trains baseline logistic regression for contact prediction. |
 | `notebooks/` | ✅ | Contains exploratory plots, location heatmaps, and sanity checks. |
 
 ---
@@ -68,10 +70,11 @@ Baseball_project/
 
 | Planned Module | Goal |
 |----------------|------|
-| `src/features/make_training_sets.py` | Merge features + labels into training-ready datasets. |
-| `src/models/train_model.py` | Train ML classifiers for contact and BIP prediction. |
+| `src/models/train_model_bip.py` | Train ML classifiers for BIP outcome prediction. |
+| `src/models/train_model_spray.py` | Train model for spray location (sector/ring bins). |
 | `src/models/evaluate.py` | Model evaluation and visualization (confusion matrix, ROC, spray maps). |
-| `docs/` | Add project documentation and architecture diagram. |
+| Dual-head architecture | CNN + tabular fusion for joint BIP outcome + spray prediction. |
+| xwOBA calculation | Compute expected weighted on-base average from predictions. |
 
 ---
 
@@ -113,15 +116,47 @@ Stored in `data_proc/SxR_bins.json`.
 
 ---
 
-## ⚙️ Example Command Line Usage
+## ⚙️ Command Line Usage (Happy Path)
+
+Run the full pipeline end-to-end:
 
 ```bash
-# Generate contact labels
-python -m src.features.make_labels_contact   --input data_raw   --output data_proc/contact_labels.parquet
+# 1. Generate features (pre-contact only, no leakage)
+python -m src.features.make_features \
+  --input data_raw/statcast_full.parquet \
+  --output data_proc/features.parquet
 
-# Generate BIP labels (10x5 spray grid)
-python -m src.features.make_labels_bip   --input data_raw   --output data_proc/labels.parquet   --bins data_proc/SxR_bins.json   --S 10 --R 5
+# 2. Generate contact labels (binary: contact vs no-contact)
+python -m src.features.make_labels_contact \
+  --input data_raw/statcast_full.parquet \
+  --output data_proc/contact_labels.parquet
+
+# 3. Generate BIP labels (outcome + spray grid)
+python -m src.features.make_labels_bip \
+  --input data_raw/statcast_full.parquet \
+  --output data_proc/labels.parquet \
+  --bins data_proc/SxR_bins.json \
+  --S 10 --R 5
+
+# 4. Create training datasets (merge features + labels)
+python -m src.features.make_training_sets \
+  --features data_proc/features.parquet \
+  --contact_labels data_proc/contact_labels.parquet \
+  --bip_labels data_proc/labels.parquet \
+  --output_dir data_proc
+
+# 5. Train baseline contact model
+python -m src.models.train_model_contact \
+  --input data_proc/training_contact.parquet \
+  --output_dir models/contact
 ```
+
+**Expected outputs:**
+- `data_proc/features.parquet` — Pre-contact features
+- `data_proc/training_contact.parquet` — Contact training set
+- `data_proc/training_bip.parquet` — BIP training set
+- `models/contact/baseline.pkl` — Trained model
+- `models/contact/metrics.json` — Evaluation metrics
 
 ---
 
