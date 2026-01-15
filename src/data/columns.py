@@ -5,13 +5,13 @@ KEEP = [
     "batter",                # Batter ID (MLBAM player identifier)
     "pitch_type",            # Type of pitch thrown (e.g., FF = Four-seam Fastball, SL = Slider, CU = Curveball)
     "release_speed",         # Pitch velocity at release, in miles per hour (mph)
-    "release_pos_x",         # Horizontal release position of the pitcher's hand (in feet, from catcher’s perspective)
+    "release_pos_x",         # Horizontal release position of the pitcher's hand (in feet, from catcher's perspective)
     "release_pos_z",         # Vertical release height of the pitcher's hand (in feet)
-    "pfx_x",                 # Horizontal movement of the pitch in inches (positive = toward catcher’s right)
-    "pfx_z",                 # Vertical movement of the pitch in inches (positive = upward “rise” relative to gravity)
-    "spin_rate_deprecated",  # Spin rate of the pitch in revolutions per minute (RPM) — labeled “deprecated” but still common
-    "p_throws",              # Pitcher’s throwing hand (‘R’ = right, ‘L’ = left)
-    "stand",                 # Batter’s stance (‘R’ = right, ‘L’ = left)
+    "pfx_x",                 # Horizontal movement of the pitch in inches (positive = toward catcher's right)
+    "pfx_z",                 # Vertical movement of the pitch in inches (positive = upward "rise" relative to gravity)
+    "spin_rate_deprecated",  # Spin rate of the pitch in revolutions per minute (RPM) — labeled "deprecated" but still common
+    "p_throws",              # Pitcher's throwing hand ('R' = right, 'L' = left)
+    "stand",                 # Batter's stance ('R' = right, 'L' = left)
     "balls",                 # Current count of balls (0–3)
     "strikes",               # Current count of strikes (0–2)
     "inning",                # Current inning number of the game
@@ -25,6 +25,12 @@ KEEP = [
     "events",                # Result of the pitch (e.g., 'single', 'home_run', 'strikeout')
     "hc_x",                  # x-coordinate of batted ball contact point or landing spot (for balls in play)
     "hc_y",                  # y-coordinate of batted ball contact point or landing spot (for balls in play)
+    # Post-contact features (only available for balls in play)
+    "launch_speed",          # Exit velocity in mph (speed of ball off bat)
+    "launch_angle",          # Launch angle in degrees (vertical angle off bat)
+    "hit_distance_sc",       # Hit distance in feet (projected landing distance)
+    "barrel",                # Barrel classification (1=barrel, 0=not barrel) - optimal contact metric
+    "babip_value",           # BABIP value (batting average on balls in play)
 ]
 
 

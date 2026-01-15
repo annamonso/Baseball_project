@@ -1,0 +1,26 @@
+{
+  "feature_columns": [
+    "release_speed",
+    "release_pos_x",
+    "release_pos_z",
+    "pfx_x",
+    "pfx_z",
+    "spin_rate_deprecated",
+    "balls",
+    "strikes",
+    "inning",
+    "outs_when_up",
+    "pitch_type",
+    "p_throws",
+    "stand",
+    "on_1b_flag",
+    "on_2b_flag",
+    "on_3b_flag",
+    "launch_speed",
+    "launch_angle",
+    "hit_distance_sc"
+  ],
+  "n_features": 19,
+  "target": "outcome",
+  "model_type": "random_forest"
+}
